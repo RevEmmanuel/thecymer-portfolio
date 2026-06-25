@@ -7,7 +7,7 @@ interface WorkSectionProps {
   onOpenVideo: (project: Project) => void;
 }
 
-const CATEGORIES = ['All', 'Fashion Shoots', 'Events', 'BTS', 'Birthday Shoots'] as const;
+const CATEGORIES = ['All', 'Fashion Shoots', 'Events', 'BTS', 'Birthday Shoots', 'Content Videos'] as const;
 type Category = typeof CATEGORIES[number];
 
 export function WorkSection({ onOpenVideo }: WorkSectionProps) {
@@ -138,6 +138,7 @@ function ProjectCard({ project, index, onClick }: { project: Project; index: num
           style={{ x: parallaxX, y: parallaxY }}
           animate={{ scale: isHovered ? 1.15 : 1.05 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
+          loading="lazy"
           className="w-full h-full object-cover origin-center"
         />
 

@@ -2,18 +2,20 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 export function Marquee() {
-  const words = [
-    "DIRECTOR OF PHOTOGRAPHY",
-    "•",
-    "COMMERCIAL",
-    "•",
-    "DOCUMENTARY",
-    "•",
-    "MUSIC VIDEOS",
-    "•",
-    "BRAND FILMS",
-    "•"
-  ];
+    const words = [
+        "EVENT COVERAGE",
+        "•",
+        "BRAND SHOOTS",
+        "•",
+        "CONTENT VIDEOS",
+        "•",
+        "BTS",
+        "•",
+        "FASHION SHOOTS",
+        "•",
+        "BIRTHDAY SHOOTS",
+        "•"
+    ];
 
   const repeated = [...words, ...words];
 

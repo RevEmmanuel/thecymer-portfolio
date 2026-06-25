@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Marquee } from './components/Marquee';
 import { WorkSection } from './components/WorkSection';
 import { About } from './components/About';
 import { Footer } from './components/Footer';
-import { VideoModal } from './components/VideoModal';
-import { CustomCursor } from './components/CustomCursor';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
+
+const VideoModal = lazy(() => import('./components/VideoModal').then(m => ({ default: m.VideoModal })));
+const CustomCursor = lazy(() => import('./components/CustomCursor').then(m => ({ default: m.CustomCursor })));
 import { Project } from './data/projects';
 import { motion, useScroll, useSpring } from 'motion/react';
 
@@ -56,7 +57,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
-      <CustomCursor />
+      <Suspense fallback={null}>
+        <CustomCursor />
+      </Suspense>
       
       <PageTransitionOverlay isVisible={isTransitioning} />
 
@@ -76,11 +79,13 @@ export default function App() {
 
       <Footer />
 
-      <VideoModal 
-        project={selectedProject} 
-        isOpen={!!selectedProject} 
-        onClose={() => setSelectedProject(null)} 
-      />
+      <Suspense fallback={null}>
+        <VideoModal
+          project={selectedProject}
+          isOpen={!!selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      </Suspense>
     </div>
   );
 }
