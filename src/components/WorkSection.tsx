@@ -1,6 +1,6 @@
 import React, { useState, useMemo, MouseEvent } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'motion/react';
-import { Project, projects } from '../data/projects';
+import { Project, projects, getThumbnail } from '../data/projects';
 import { Play } from 'lucide-react';
 
 interface WorkSectionProps {
@@ -133,7 +133,8 @@ function ProjectCard({ project, index, onClick }: { project: Project; index: num
     >
       <div className="relative aspect-[4/5] sm:aspect-video md:aspect-[4/5] overflow-hidden rounded-2xl bg-[var(--surface)] mb-4 border-2 border-transparent transition-colors duration-500 group-hover:border-[var(--color-primary)]">
         <motion.img
-          src={project.thumbnail}
+          src={getThumbnail(project)}
+          referrerPolicy="no-referrer"
           alt={project.title}
           style={{ x: parallaxX, y: parallaxY }}
           animate={{ scale: isHovered ? 1.15 : 1.05 }}

@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
-import { projects } from '../data/projects';
 
 interface AboutProps {
   onNavigate?: (sectionId: string) => void;
 }
 
-const SLIDESHOW_IDS = ["1", "2", "3", "4", "5"];
-const slideshowThumbnails = SLIDESHOW_IDS.map(
-  id => projects.find(p => p.id === id)!
-).filter(Boolean);
-
 export function About({ onNavigate }: AboutProps) {
-  const [slideIndex, setSlideIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSlideIndex(i => (i + 1) % slideshowThumbnails.length);
-    }, 3500);
-    return () => clearInterval(timer);
-  }, []);
-
-  const currentProject = slideshowThumbnails[slideIndex];
-
   return (
     <section id="about" className="py-32 px-6 md:px-12 bg-gradient-to-b from-[var(--bg)] to-[var(--surface)] relative overflow-hidden">
 
@@ -42,32 +25,12 @@ export function About({ onNavigate }: AboutProps) {
           <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-primary)] to-[var(--color-tertiary)] rounded-3xl blur-2xl opacity-40 translate-x-4 translate-y-4" />
 
           <div className="relative aspect-square md:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10 dark:border-white/5">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={slideIndex}
-                src={currentProject.thumbnail}
-                alt={currentProject.title}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                className="absolute inset-0 w-full h-full object-cover mix-blend-luminosity hover:mix-blend-normal transition-[mix-blend-mode] duration-700"
-              />
-            </AnimatePresence>
+            <img
+              src="/cymer_herself.JPG"
+              alt="thecymer"
+              className="absolute inset-0 w-full h-full object-cover object-[center_25%] mix-blend-luminosity hover:mix-blend-normal transition-[mix-blend-mode] duration-700"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-
-            {/* Slide indicators */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-              {slideshowThumbnails.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSlideIndex(i)}
-                  className={`h-1 rounded-full transition-all duration-300 ${
-                    i === slideIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40'
-                  }`}
-                />
-              ))}
-            </div>
           </div>
         </motion.div>
 
