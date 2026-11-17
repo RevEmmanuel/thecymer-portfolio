@@ -1,90 +1,69 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Instagram, Mail, Phone } from 'lucide-react';
-import { TermsModal } from './TermsModal';
+import { ArrowUp } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Hand } from './ui/Pencil';
+import { site, whatsappLink } from '@/content';
 
-// Custom TikTok Icon SVG since Lucide might not have it or it looks better native
-const TikTokIcon = ({ size = 22 }: { size?: number }) => (
-  <svg 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round"
-  >
-    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-  </svg>
-);
-
-export function Footer() {
-  const [isTermsOpen, setIsTermsOpen] = useState(false);
-
+/** Lights off: a cobalt end board with the wordmark at full width. */
+export function Footer({ onTerms }: { onTerms: () => void }) {
+  const reduce = useReducedMotion();
   return (
-    <footer id="contact" className="bg-[var(--bg)] pt-32 pb-16 px-6 md:px-12 border-t border-[var(--border)] overflow-hidden relative">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-16 mb-24">
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          <h2 className="font-display font-medium text-4xl md:text-6xl mb-6">Let's create <br/> something <span className="text-gradient italic">extraordinary</span>.</h2>
-          <a href="mailto:mercyogunleye06@gmail.com" className="inline-block text-xl md:text-3xl font-light hover:text-[var(--color-primary)] transition-colors border-b border-transparent hover:border-[var(--color-primary)] pb-1 mb-2">
-            mercyogunleye06@gmail.com
+    <footer data-tone="dark" className="relative overflow-hidden bg-blueprint pb-24 pt-20 text-snow md:pb-8 md:pt-24">
+      <div className="grid grid-cols-1 gap-10 px-[4vw] md:grid-cols-12">
+        <div className="md:col-span-6">
+          <Hand className="text-[clamp(36px,3.6vw,56px)] text-tape">the best stories deserve to be seen.</Hand>
+          <a href={`mailto:${site.contact.email}`} className="mt-6 block break-all text-[clamp(1.3rem,2.6vw,2.4rem)] font-[750] tracking-[-0.02em] [font-stretch:112%] hover:text-tape">
+            {site.contact.email}
           </a>
-          <br />
-          <a href="tel:+2348153177168" className="inline-block text-lg md:text-xl font-light hover:text-[var(--color-tertiary)] transition-colors border-b border-transparent hover:border-[var(--color-tertiary)] pb-1">
-            +234 815 317 7168
+          <a href={`tel:${site.contact.phone}`} className="mt-1 block text-snow/70 hover:text-snow">
+            {site.contact.phoneDisplay}
           </a>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap gap-4 md:gap-6"
-        >
-          <SocialLink href="https://instagram.com/thecymer" icon={<Instagram />} label="Instagram" hoverColor="hover:bg-[#E1306C]/15 hover:text-[#E1306C] hover:border-[#E1306C]" />
-          <SocialLink href="https://tiktok.com/@thecymer" icon={<TikTokIcon />} label="TikTok" hoverColor="hover:bg-[#00f2fe]/15 hover:text-[#00f2fe] hover:border-[#00f2fe]" />
-          <SocialLink href="mailto:mercyogunleye06@gmail.com" icon={<Mail />} label="Email" hoverColor="hover:bg-[#743ad5]/15 hover:text-[#743ad5] hover:border-[#743ad5]" />
-          <SocialLink href="tel:+2348153177168" icon={<Phone />} label="Phone" hoverColor="hover:bg-[#25D366]/15 hover:text-[#25D366] hover:border-[#25D366]" />
-        </motion.div>
-      </div>
-
-      <div className="max-w-7xl mx-auto pt-8 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-4 text-sm opacity-50 relative z-10">
-        <p>&copy; {new Date().getFullYear()} thecymer. All rights reserved.</p>
-        <div className="flex gap-6">
-          <button onClick={() => setIsTermsOpen(true)} className="hover:text-[var(--color-primary)] transition-colors">Privacy Policy</button>
-          <button onClick={() => setIsTermsOpen(true)} className="hover:text-[var(--color-primary)] transition-colors">Terms of Service</button>
+        </div>
+        <nav aria-label="Elsewhere" className="md:col-span-3">
+          <p className="label text-snow/50">Elsewhere</p>
+          <ul className="mt-3 space-y-1.5 text-lg">
+            {site.socials.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer" className="hover:text-tape">
+                  {s.label} <span className="label text-snow/50">{s.handle}</span>
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className="hover:text-tape">
+                WhatsApp
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div className="md:col-span-3 md:text-right">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })}
+            className="label inline-flex items-center gap-3 bg-snow px-5 py-3.5 text-coal transition-transform hover:-rotate-2"
+          >
+            Back to the table <ArrowUp size={14} />
+          </button>
         </div>
       </div>
-      
-      {/* Background massive text */}
-      <div className="absolute inset-x-0 bottom-0 pointer-events-none overflow-hidden flex justify-center opacity-[0.03] text-[var(--fg)] select-none">
-        <span className="font-display font-bold text-[20vw] leading-[0.7] -translate-y-10 whitespace-nowrap">
-          thecymer
+
+      <motion.div
+        aria-hidden
+        className="mt-16 px-[2vw] md:mt-24"
+        initial={reduce ? false : { y: '30%', opacity: 0 }}
+        whileInView={{ y: '0%', opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span className="wordmark block w-full text-snow" />
+      </motion.div>
+
+      <div className="label mt-8 flex flex-col gap-3 border-t border-snow/20 px-[4vw] pt-5 text-snow/55 md:flex-row md:justify-between">
+        <span>
+          © {new Date().getFullYear()} {site.brand.name} · {site.brand.role}
         </span>
+        <button onClick={onTerms} className="text-left hover:text-snow">
+          Booking terms
+        </button>
       </div>
-
-      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
     </footer>
-  );
-}
-
-function SocialLink({ href, icon, label, hoverColor }: { href: string; icon: React.ReactNode; label: string; hoverColor: string }) {
-  return (
-    <a 
-      href={href} 
-      aria-label={label}
-      target={href.startsWith('http') ? '_blank' : '_self'}
-      rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className={`w-14 h-14 rounded-full border border-[var(--border)] flex items-center justify-center transition-all duration-300 hover:scale-110 overflow-hidden text-center ${hoverColor}`}
-    >
-      {React.isValidElement(icon) ? React.cloneElement(icon as React.ReactElement, { size: 22 }) : icon}
-    </a>
   );
 }

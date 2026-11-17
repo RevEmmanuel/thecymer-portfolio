@@ -2,33 +2,77 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/jpeg" href="/favicon.jpeg" />
-    <title>thecymer - Mobile Videographer & Storyteller</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f5f3ec" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      // Apply the saved (or system) theme before first paint — no flash.
+      (function () {
+        try {
+          var t = localStorage.getItem('tc-theme');
+          if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          if (t === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#121210');
+          }
+        } catch (e) {}
+      })();
+    </script>
 
-    <!-- Meta Description -->
-    <meta name="description" content="Mobile videographer and storyteller specializing in content videos, brand films, fashion videography, and event coverage. Capturing raw emotion and authentic moments." />
+    <title>thecymer — Mobile Videographer & Storyteller</title>
+    <meta
+      name="description"
+      content="thecymer is a mobile videographer and storyteller making content videos, fashion and brand films, birthday shoots and event coverage. Small camera, big stories."
+    />
+    <link rel="canonical" href="https://thecymer.vercel.app/" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="thecymer" />
     <meta property="og:url" content="https://thecymer.vercel.app/" />
-    <meta property="og:title" content="thecymer - Mobile Videographer & Storyteller" />
-    <meta property="og:description" content="Mobile videographer and storyteller specializing in content videos, brand films, fashion videography, and event coverage. Capturing raw emotion and authentic moments." />
-    <meta property="og:image" content="https://thecymer.vercel.app/favicon.jpeg" />
+    <meta property="og:title" content="thecymer — Mobile Videographer & Storyteller" />
+    <meta
+      property="og:description"
+      content="Content videos, fashion and brand films, birthday shoots and event coverage. Small camera, big stories."
+    />
+    <meta property="og:image" content="https://thecymer.vercel.app/images/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-    <!-- Twitter Card -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://thecymer.vercel.app/" />
-    <meta property="twitter:title" content="thecymer - Mobile Videographer & Storyteller" />
-    <meta property="twitter:description" content="Mobile videographer and storyteller specializing in content videos, brand films, fashion videography, and event coverage. Capturing raw emotion and authentic moments." />
-    <meta property="twitter:image" content="https://thecymer.vercel.app/favicon.jpeg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="thecymer — Mobile Videographer & Storyteller" />
+    <meta
+      name="twitter:description"
+      content="Content videos, fashion and brand films, birthday shoots and event coverage. Small camera, big stories."
+    />
+    <meta name="twitter:image" content="https://thecymer.vercel.app/images/og.jpg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "thecymer",
+        "description": "Mobile videographer and storyteller — content videos, fashion and brand films, birthday shoots and event coverage.",
+        "url": "https://thecymer.vercel.app/",
+        "image": "https://thecymer.vercel.app/images/og.jpg",
+        "email": "mailto:mercyogunleye06@gmail.com",
+        "telephone": "+2348153177168",
+        "sameAs": ["https://instagram.com/thecymer", "https://tiktok.com/@thecymer"]
+      }
+    </script>
+
+    <link rel="preconnect" href="https://drive.google.com" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding: 2rem; color: #121212; font-family: sans-serif">
+        thecymer — mobile videographer & storyteller. Email mercyogunleye06@gmail.com or find @thecymer on Instagram.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

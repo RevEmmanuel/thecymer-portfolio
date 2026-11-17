@@ -1,91 +1,92 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { Marquee } from './components/Marquee';
-import { WorkSection } from './components/WorkSection';
-import { About } from './components/About';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
+import { MotionConfig } from 'motion/react';
+import { Lightbox, type FromRect } from './components/Lightbox';
+import { ShotLog } from './components/ShotLog';
+import { Hello } from './components/Hello';
+import { ClothesLine } from './components/ClothesLine';
+import { Notes } from './components/Notes';
+import { BookingSheet } from './components/BookingSheet';
 import { Footer } from './components/Footer';
-import { PageTransitionOverlay } from './components/PageTransitionOverlay';
+import { EdgeTabs } from './components/EdgeTabs';
+import { projectBySlug, projects } from './content';
+import { scrollToId } from './lib/hooks';
 
-const VideoModal = lazy(() => import('./components/VideoModal').then(m => ({ default: m.VideoModal })));
-const CustomCursor = lazy(() => import('./components/CustomCursor').then(m => ({ default: m.CustomCursor })));
-import { Project } from './data/projects';
-import { motion, useScroll, useSpring } from 'motion/react';
+const Loupe = lazy(() => import('./components/Loupe').then((m) => ({ default: m.Loupe })));
+const FilmView = lazy(() => import('./components/FilmView').then((m) => ({ default: m.FilmView })));
+const Reel = lazy(() => import('./components/Reel').then((m) => ({ default: m.Reel })));
+const Terms = lazy(() => import('./components/Terms').then((m) => ({ default: m.Terms })));
+
+const ALL = projects.map((p) => p.slug);
+const slugFromHash = () => {
+  const m = window.location.hash.match(/^#work\/([\w-]+)$/);
+  return m && projectBySlug(m[1]) ? m[1] : null;
+};
+
+type Film = { slug: string; list: string[]; from?: FromRect };
 
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDark]);
-
-  const toggleDark = () => {
-    setIsDark(!isDark);
-  };
-
-  const handleNavigate = (id: string) => {
-    setIsTransitioning(true);
-    
-    // After overlay covers screen, jump to section
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        // Adjust for navbar if needed. We scroll directly to element
-        const top = id === 'hero' ? 0 : el.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top, behavior: 'instant' });
-      }
-      
-      // Give DOM time to paint jump, then remove overlay to reveal section
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 50);
-    }, 600); // Wait for the 0.6s overlay entrance animation
-  };
-
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+  const [film, setFilm] = useState<Film | null>(() => {
+    const s = slugFromHash();
+    return s ? { slug: s, list: ALL } : null;
   });
+  const [reel, setReel] = useState(false);
+  const [terms, setTerms] = useState(false);
+
+  // Films are deep-linkable (#work/<slug>) and close with the browser's back button.
+  useEffect(() => {
+    const onPop = () => {
+      const s = slugFromHash();
+      setFilm((f) => (s ? { slug: s, list: f?.list ?? ALL } : null));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  const openFilm = useCallback((slug: string, list: string[], from?: FromRect) => {
+    setFilm({ slug, list, from });
+    history.pushState({ tcFilm: true }, '', `#work/${slug}`);
+  }, []);
+  const navigate = useCallback((slug: string) => {
+    setFilm((f) => (f ? { ...f, slug } : f));
+    history.replaceState(history.state, '', `#work/${slug}`);
+  }, []);
+  const closeFilm = useCallback(() => {
+    setFilm(null);
+    if (history.state?.tcFilm) history.back();
+    else history.replaceState(null, '', window.location.pathname + window.location.search);
+  }, []);
+  const book = useCallback(() => {
+    if (film) {
+      closeFilm();
+      setTimeout(() => scrollToId('book'), 450);
+    } else scrollToId('book');
+  }, [film, closeFilm]);
 
   return (
-    <div className="min-h-screen">
+    <MotionConfig reducedMotion="user">
+      <a href="#log" className="label fixed left-4 top-4 z-[400] -translate-y-24 bg-cobalt px-4 py-3 text-paper focus:translate-y-0">
+        Skip to the films
+      </a>
       <Suspense fallback={null}>
-        <CustomCursor />
+        <Loupe />
       </Suspense>
-      
-      <PageTransitionOverlay isVisible={isTransitioning} />
+      <EdgeTabs />
 
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-secondary)] to-[var(--color-tertiary)] origin-left z-50"
-        style={{ scaleX }}
-      />
-
-      <Navbar isDark={isDark} toggleDark={toggleDark} onNavigate={handleNavigate} />
-      
       <main>
-        <Hero onNavigate={handleNavigate} />
-        <Marquee />
-        <WorkSection onOpenVideo={(p) => setSelectedProject(p)} />
-        <About onNavigate={handleNavigate} />
+        <Lightbox onOpen={openFilm} onReel={() => setReel(true)} onBook={book} />
+        <ShotLog onOpen={openFilm} />
+        <Hello />
+        <ClothesLine onOpen={openFilm} />
+        <Notes />
+        <BookingSheet onTerms={() => setTerms(true)} />
       </main>
-
-      <Footer />
+      <Footer onTerms={() => setTerms(true)} />
 
       <Suspense fallback={null}>
-        <VideoModal
-          project={selectedProject}
-          isOpen={!!selectedProject}
-          onClose={() => setSelectedProject(null)}
-        />
+        <FilmView slug={film?.slug ?? null} list={film?.list ?? ALL} from={film?.from} onClose={closeFilm} onNavigate={navigate} onBook={book} />
+        <Reel open={reel} onClose={() => setReel(false)} />
+        <Terms open={terms} onClose={() => setTerms(false)} />
       </Suspense>
-    </div>
+    </MotionConfig>
   );
 }
