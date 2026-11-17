@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Loader2 } from 'lucide-react';
-import { Project } from '../data/projects';
+import { Project, getThumbnail } from '../data/projects';
 
 interface VideoModalProps {
   project: Project | null;
@@ -71,7 +71,7 @@ export function VideoModal({ project, isOpen, onClose }: VideoModalProps) {
               <video
                 ref={videoRef}
                 src={project.videoUrl}
-                poster={project.thumbnail}
+                poster={getThumbnail(project)}
                 className={`w-full h-full object-contain transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                 controls
                 autoPlay
